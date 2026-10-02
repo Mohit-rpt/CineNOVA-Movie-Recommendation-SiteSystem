@@ -27,6 +27,8 @@ app = FastAPI(
 )
 
 # CORS configuration
+frontend_url = os.getenv("FRONTEND_URL", "").strip()
+
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -34,12 +36,17 @@ origins = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://cine-nova-movie-recommendation-site.vercel.app",
     "*"
 ]
+if frontend_url:
+    origins.append(frontend_url)
+    origins.append(frontend_url.rstrip("/"))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
